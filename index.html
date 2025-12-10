@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线圆角图片生成器 - 免费制作圆角图片</title>
+    <meta name="description" content="免费在线圆角图片生成工具，支持自定义圆角度数，可快速将普通图片转换为圆角图片并下载。操作简单，无需注册。">
+    <meta name="keywords" content="圆角图片,在线生成,图片处理,圆角头像,图片圆角工具">
+    <link rel="canonical" href="https://round.jinshi.group">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+            color: white;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .tool-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .upload-section {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .preview-section {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #f9f9ff;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .controls {
+            margin-top: 20px;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="range"] {
+            width: 100%;
+        }
+
+        .value-display {
+            display: inline-block;
+            width: 50px;
+            text-align: center;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .preview-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .preview-box {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 20px;
+            background: #f9f9f9;
+        }
+
+        .preview-image {
+            display: none;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .instructions {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .steps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .step {
+            flex: 1;
+            min-width: 200px;
+            padding: 20px;
+            border-radius: 10px;
+            background: #f9f9ff;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 30px 0;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .tool-section {
+                flex-direction: column;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>在线圆角图片生成器</h1>
+            <p class="subtitle">免费将您的图片转换为圆角样式，支持自定义圆角度数</p>
+        </header>
+
+        <main>
+            <section class="main-content">
+                <div class="tool-section">
+                    <div class="upload-section">
+                        <h2 class="section-title">上传图片</h2>
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-icon">📁</div>
+                            <p>点击此处选择图片或拖拽图片到此区域</p>
+                            <p>支持 JPG、PNG、GIF 格式</p>
+                            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                        </div>
+
+                        <div class="controls">
+                            <div class="control-group">
+                                <label for="radiusSlider">
+                                    圆角度数: <span id="radiusValue" class="value-display">20</span>px
+                                </label>
+                                <input type="range" id="radiusSlider" min="0" max="100" value="20">
+                            </div>
+
+                            <div class="control-group">
+                                <label for="sizeSlider">
+                                    图片大小: <span id="sizeValue" class="value-display">100</span>%
+                                </label>
+                                <input type="range" id="sizeSlider" min="10" max="200" value="100">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="preview-section">
+                        <h2 class="section-title">预览效果</h2>
+                        <div class="preview-container">
+                            <div class="preview-box">
+                                <img id="previewImage" class="preview-image" alt="圆角图片预览">
+                                <p id="previewPlaceholder">请先上传图片</p>
+                            </div>
+
+                            <div class="actions">
+                                <button id="downloadBtn" class="btn-primary" disabled>下载圆角图片</button>
+                                <button id="resetBtn" class="btn-secondary">重置</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="instructions">
+                <h2 class="section-title">使用说明</h2>
+                <div class="steps">
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <strong>上传图片</strong>
+                        <p>点击上传区域选择您想要处理的图片，支持常见图片格式</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <strong>调整参数</strong>
+                        <p>拖动滑块调整圆角度数和图片大小，实时预览效果</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <strong>下载保存</strong>
+                        <p>满意效果后点击下载按钮，保存圆角图片到本地</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 圆角图片生成器 - https://round.jinshi.group</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const radiusSlider = document.getElementById('radiusSlider');
+            const radiusValue = document.getElementById('radiusValue');
+            const sizeSlider = document.getElementById('sizeSlider');
+            const sizeValue = document.getElementById('sizeValue');
+            const previewImage = document.getElementById('previewImage');
+            const previewPlaceholder = document.getElementById('previewPlaceholder');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const resetBtn = document.getElementById('resetBtn');
+
+            // 事件监听器
+            uploadArea.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', handleImageUpload);
+
+            // 拖拽上传功能
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#667eea';
+                uploadArea.style.backgroundColor = '#f0f0ff';
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.style.borderColor = '#ccc';
+                uploadArea.style.backgroundColor = '';
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#ccc';
+                uploadArea.style.backgroundColor = '';
+
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    handleImageUpload();
+                }
+            });
+
+            // 参数调整
+            radiusSlider.addEventListener('input', updatePreview);
+            sizeSlider.addEventListener('input', updatePreview);
+
+            // 下载和重置功能
+            downloadBtn.addEventListener('click', downloadImage);
+            resetBtn.addEventListener('click', resetTool);
+
+            // 处理图片上传
+            function handleImageUpload() {
+                if (!fileInput.files || !fileInput.files[0]) return;
+
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        // 保存原始尺寸
+                        previewImage.setAttribute('data-original-width', img.width);
+                        previewImage.setAttribute('data-original-height', img.height);
+                        
+                        previewImage.src = e.target.result;
+                        previewImage.style.display = 'block';
+                        previewPlaceholder.style.display = 'none';
+                        downloadBtn.disabled = false;
+                        updatePreview();
+                    };
+                    img.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+            }
+
+            // 更新预览
+            function updatePreview() {
+                const radius = radiusSlider.value;
+                const size = sizeSlider.value;
+
+                radiusValue.textContent = radius;
+                sizeValue.textContent = size;
+
+                if (previewImage.src) {
+                    previewImage.style.borderRadius = `${radius}px`;
+                    
+                    // 获取原始尺寸
+                    const originalWidth = parseFloat(previewImage.getAttribute('data-original-width'));
+                    const originalHeight = parseFloat(previewImage.getAttribute('data-original-height'));
+                    
+                    if (originalWidth && originalHeight) {
+                        // 固定预览容器的尺寸处理
+                        const previewBox = document.querySelector('.preview-box');
+                        const containerWidth = previewBox.clientWidth;
+                        const containerHeight = previewBox.clientHeight;
+                        
+                        // 计算基于容器的最大尺寸
+                        const scale = size / 100;
+                        const maxWidth = containerWidth * scale;
+                        const maxHeight = containerHeight * scale;
+                        
+                        // 按照原始比例计算适合的尺寸
+                        const aspectRatio = originalWidth / originalHeight;
+                        let displayWidth = maxWidth;
+                        let displayHeight = displayWidth / aspectRatio;
+                        
+                        // 如果高度超过最大高度，则以高度为准
+                        if (displayHeight > maxHeight) {
+                            displayHeight = maxHeight;
+                            displayWidth = displayHeight * aspectRatio;
+                        }
+                        
+                        // 居中显示
+                        previewImage.style.width = displayWidth + 'px';
+                        previewImage.style.height = displayHeight + 'px';
+                    }
+                }
+            }
+
+            // 下载图片
+            function downloadImage() {
+                if (!previewImage.src) return;
+
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                const img = new Image();
+                img.crossOrigin = 'Anonymous';
+                img.onload = function() {
+                    // 使用原始图片尺寸以保证质量
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+
+                    // 创建圆角矩形路径
+                    // 计算相对于原始图片的圆角半径
+                    const displayRadius = parseInt(radiusSlider.value);
+                    const originalDisplayWidth = parseFloat(previewImage.getAttribute('data-original-width'));
+                    const scale = img.width / originalDisplayWidth;
+                    const radius = displayRadius * scale;
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(radius, 0);
+                    ctx.lineTo(canvas.width - radius, 0);
+                    ctx.quadraticCurveTo(canvas.width, 0, canvas.width, radius);
+                    ctx.lineTo(canvas.width, canvas.height - radius);
+                    ctx.quadraticCurveTo(canvas.width, canvas.height, canvas.width - radius, canvas.height);
+                    ctx.lineTo(radius, canvas.height);
+                    ctx.quadraticCurveTo(0, canvas.height, 0, canvas.height - radius);
+                    ctx.lineTo(0, radius);
+                    ctx.quadraticCurveTo(0, 0, radius, 0);
+                    ctx.closePath();
+                    ctx.clip();
+
+                    // 绘制图片
+                    ctx.drawImage(img, 0, 0);
+
+                    // 下载图片
+                    const link = document.createElement('a');
+                    link.download = '圆角图片.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                };
+
+                img.src = previewImage.src;
+            }
+
+            // 重置工具
+            function resetTool() {
+                fileInput.value = '';
+                radiusSlider.value = 20;
+                sizeSlider.value = 100;
+                radiusValue.textContent = '20';
+                sizeValue.textContent = '100';
+                previewImage.style.display = 'none';
+                previewPlaceholder.style.display = 'block';
+                downloadBtn.disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>
